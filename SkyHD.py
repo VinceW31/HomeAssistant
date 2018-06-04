@@ -173,6 +173,12 @@ def data_input(phrase):
                 except:
                     print("Failed to establish connection")
                     log_device(phrase, action, " Fail")
+                    
+        if "tv" in phrase or "telly" in phrase:
+            if " on" in phrase or " off" in phrase:
+                os.system ("python BlackBeanControl.py -c power" )
+                log_IR(phrase," TV Power ON/OFF")                    
+                    
         phrase = phrase + "channels" #do not delete, needed for "Switch the TV.... commands"
     
 # TV control (IR Functions, if BlackBean RM3 is used)
