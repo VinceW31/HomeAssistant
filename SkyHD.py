@@ -161,8 +161,8 @@ def switch_device_action(phrase, device, action):
         r = http.request('GET', device, action)
         r.status
         if r.status == 200:
-        print(device,action)
-        print("Lamp is ON")
+        print(device, action)
+        print(devive ,"is ", action)
         log_device(phrase, device, action, " Successful")
     except:
         print("Failed to establish connection")
