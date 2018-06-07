@@ -144,36 +144,66 @@ def data_input(phrase):
     phrase = phrase.lower().strip()
     print("Revised command is " + phrase)
     
+def switch_device(phrase, device_action):    
+    try:
+        r = http.request('GET', device_action)
+        r.status
+        if r.status == 200:
+        print(device_action)
+        print("Lamp is ON")
+        log_device(phrase, device_action, " Successful")
+    except:
+        print("Failed to establish connection")
+        log_device(phrase, device_action, " Fail")    
+
+def switch_device_action(phrase, device, action):    
+    try:
+        r = http.request('GET', device, action)
+        r.status
+        if r.status == 200:
+        print(device,action)
+        print("Lamp is ON")
+        log_device(phrase, device, action, " Successful")
+    except:
+        print("Failed to establish connection")
+        log_device(phrase, device, action, " Fail")
+        
 #Devices Control
     if "switchdevice" in phrase:
         if "lamp" in phrase:
+            #device = lamp
             if "on" in phrase:
+                #action = ON
                 action = lamp_ON
-                try:
-                    r = http.request('GET', action)
-                    r.status
-                    if r.status == 200:
-                        print(action)
-                        print("Lamp is ON")
-                        log_device(phrase, action, " Successful")
-                except:
-                    print("Failed to establish connection")
-                    log_device(phrase, action, " Fail")
+                #switch_device(phrase, action)
+                #try:
+                    #r = http.request('GET', action)
+                    #r.status
+                    #if r.status == 200:
+                        #print(action)
+                        #print("Lamp is ON")
+                        #log_device(phrase, action, " Successful")
+                #except:
+                    #print("Failed to establish connection")
+                    #log_device(phrase, action, " Fail")
                     
             elif "off" in phrase:
                 #command = "Switch the Lamp OFF"
+                #action = OFF
                 action = lamp_OFF
-                try:
-                    r = http.request('GET', action)
-                    r.status
-                    if r.status == 200:
-                        print(action)
-                        print("Lamp is OFF")
-                        log_device(phrase, action, " Successful")
-                except:
-                    print("Failed to establish connection")
-                    log_device(phrase, action, " Fail")
-                    
+                #try:
+                    #r = http.request('GET', action)
+                    #r.status
+                    #if r.status == 200:
+                        #print(action)
+                        #print("Lamp is OFF")
+                        #log_device(phrase, action, " Successful")
+                #except:
+                    #print("Failed to establish connection")
+                    #log_device(phrase, action, " Fail")
+            switch_device(phrase, action)
+            #switch_device_action(phrase, device, action)
+            
         if "tv" in phrase or "telly" in phrase:
             if " on" in phrase or " off" in phrase:
                 os.system ("python BlackBeanControl.py -c power" )
