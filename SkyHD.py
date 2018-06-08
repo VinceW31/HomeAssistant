@@ -23,6 +23,8 @@ http = urllib3.PoolManager()
 #lamp_OFF = 'http://192.168.1.95/control?cmd=gpio,12,0'
 lamp_ON = 'http://192.168.1.95/on'
 lamp_OFF = 'http://192.168.1.95/off'
+kitchen_lights_ON = 'http://192.168.1.118/on'
+kitchen_lights_OFF = 'http://192.168.1.118/off'
 
 app = Flask(__name__)
 
@@ -137,102 +139,79 @@ def log_device(phrase, action, result):
         f.write("\n\n" + now + "\nPhrase recieved = " + phrase + "\nAction: " + action + "\nResult: " + result)
         f.close()
 
+def switch_device(phrase, device_action):    
+    try:
+        r = http.request('GET', device_action)
+        r.status
+        if r.status == 200:
+            print(device_action)
+            log_device(phrase, device_action, " Successful")
+    except:
+        print("Failed to establish connection")
+        log_device(phrase, device_action, " Fail")    
+
+##def switch_device_action(phrase, device, action):    
+##    try:
+##        r = http.request('GET', device, action)
+##        r.status
+##        if r.status == 200:
+##            print(device, action)
+##            print(devive ,"is ", action)
+##            log_device(phrase, device, action, " Successful")
+##    except:
+##        print("Failed to establish connection")
+##        log_device(phrase, device, action, " Fail")
+
 @app.route("/<phrase>", methods = ['POST', 'GET'])
        
 def data_input(phrase):
     print("Command recieved is " + phrase)
     phrase = phrase.lower().strip()
     print("Revised command is " + phrase)
-    
-def switch_device(phrase, device_action):    
-    try:
-        r = http.request('GET', device_action)
-        r.status
-        if r.status == 200:
-        print(device_action)
-        print("Lamp is ON")
-        log_device(phrase, device_action, " Successful")
-    except:
-        print("Failed to establish connection")
-        log_device(phrase, device_action, " Fail")    
 
-def switch_device_action(phrase, device, action):    
-    try:
-        r = http.request('GET', device, action)
-        r.status
-        if r.status == 200:
-        print(device, action)
-        print(devive ,"is ", action)
-        log_device(phrase, device, action, " Successful")
-    except:
-        print("Failed to establish connection")
-        log_device(phrase, device, action, " Fail")
-        
+    
 #Devices Control
     if "switchdevice" in phrase:
+        if "kitchen" in phrase:
+            if "lights" in phrase:
+                if "on" in phrase:
+                    action = kitchen_lights_ON
+                if "off" in phrase:
+                    action = kitchen_lights_OFF
+                switch_device(phrase, action)
+                
         if "lamp" in phrase:
-            #device = lamp
             if "on" in phrase:
-                #action = ON
                 action = lamp_ON
-                #switch_device(phrase, action)
-                #try:
-                    #r = http.request('GET', action)
-                    #r.status
-                    #if r.status == 200:
-                        #print(action)
-                        #print("Lamp is ON")
-                        #log_device(phrase, action, " Successful")
-                #except:
-                    #print("Failed to establish connection")
-                    #log_device(phrase, action, " Fail")
-                    
             elif "off" in phrase:
-                #command = "Switch the Lamp OFF"
-                #action = OFF
                 action = lamp_OFF
-                #try:
-                    #r = http.request('GET', action)
-                    #r.status
-                    #if r.status == 200:
-                        #print(action)
-                        #print("Lamp is OFF")
-                        #log_device(phrase, action, " Successful")
-                #except:
-                    #print("Failed to establish connection")
-                    #log_device(phrase, action, " Fail")
             switch_device(phrase, action)
-            #switch_device_action(phrase, device, action)
-            
+                    
         if "tv" in phrase or "telly" in phrase:
             if " on" in phrase or " off" in phrase:
                 os.system ("python BlackBeanControl.py -c power" )
-                log_IR(phrase," TV Power ON/OFF")                    
-                    
+                log_IR(phrase," TV Power ON/OFF")
+
         phrase = phrase + "channels" #do not delete, needed for "Switch the TV.... commands"
     
-# TV control (IR Functions, if BlackBean RM3 is used)
+# TV control (IR Functions)
     if "tvir" in phrase:
         if " mute" in phrase or " unmute" in phrase:
-            #os.system ("python RM3control.py -c mute")
             os.system ("python BlackBeanControl.py -c mute")
             log_IR(phrase," TV Volume Mute/Unmute")
 
         elif " on" in phrase or " off" in phrase:
-           # os.system ("python RM3control.py -c power" )
             os.system ("python BlackBeanControl.py -c power" )
             log_IR(phrase," TV Power ON/OFF")
 
         elif " up" in phrase:
             for i in range (Vol_Range):
-                #os.system ("python RM3control.py -c volup")
                 os.system ("python BlackBeanControl.py -c volup")
                 log_IR(phrase," TV Volume UP")
                 time.sleep(.500)
 
         elif " down" in phrase:
             for i in range (Vol_Range):
-                #os.system ("python RM3control.py -c voldown")
                 os.system ("python BlackBeanControl.py -c voldown")
                 log_IR(phrase," TV Volume DOWN")
                 time.sleep(.500)
@@ -366,8 +345,8 @@ def switch_device_action(phrase, device, action):
                 os.system ("sky-remote-cli " + IP + " " + SkyChannelList.bbc_local)
                 log_channel(phrase,IP,SkyChannelList.bbc_local)
             else:
-                os.system ("sky-remote-cli " + IP + " " + SkyChannelList.skynews)
-                log_channel(phrase,IP,SkyChannelList.skynews)
+                os.system ("sky-remote-cli " + IP + " " + SkyChannelList.bbc_1)
+                log_channel(phrase,IP,SkyChannelList.bbc_1)
 
 
         if "itv" in phrase: 
@@ -440,5 +419,6 @@ def switch_device_action(phrase, device, action):
 
 if __name__== "__main__":
     app.run(host='0.0.0.0' , debug=False, use_reloader=False)
+
 
 
