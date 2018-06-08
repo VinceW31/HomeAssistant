@@ -150,18 +150,8 @@ def switch_device(phrase, device_action):
         print("Failed to establish connection")
         log_device(phrase, device_action, " Fail")    
 
-##def switch_device_action(phrase, device, action):    
-##    try:
-##        r = http.request('GET', device, action)
-##        r.status
-##        if r.status == 200:
-##            print(device, action)
-##            print(devive ,"is ", action)
-##            log_device(phrase, device, action, " Successful")
-##    except:
-##        print("Failed to establish connection")
-##        log_device(phrase, device, action, " Fail")
 
+# put all definitions before this line to avoid flask error
 @app.route("/<phrase>", methods = ['POST', 'GET'])
        
 def data_input(phrase):
