@@ -146,10 +146,11 @@ def switch_device(phrase, device_action):
         if r.status == 200:
             print(device_action)
             log_device(phrase, device_action, " Successful")
+        else:
+            log_device(phrase, device_action, " Invalid Status reply from device")   
     except:
         print("Failed to establish connection")
         log_device(phrase, device_action, " Fail")    
-
 
 # put all definitions before this line to avoid flask error
 @app.route("/<phrase>", methods = ['POST', 'GET'])
@@ -169,6 +170,22 @@ def data_input(phrase):
                 if "off" in phrase:
                     action = kitchen_lights_OFF
                 switch_device(phrase, action)
+
+         if "lounge" in phrase:
+            if "lights" in phrase or "light" in phrase:
+                if "on" in phrase:
+                    action = lounge_lights_ON
+                if "off" in phrase:
+                    action = lounge_lights_OFF
+                switch_device(phrase, action)
+
+        if "dining room" in phrase:
+            if "lights" in phrase or "light" in phrase:
+                if "on" in phrase:
+                    action = diningroom_lights_ON
+                if "off" in phrase:
+                    action = diningroom_lights_OFF
+                switch_device(phrase, action)               
                 
         if "lamp" in phrase:
             if "on" in phrase:
@@ -176,7 +193,21 @@ def data_input(phrase):
             elif "off" in phrase:
                 action = lamp_OFF
             switch_device(phrase, action)
-                    
+
+        if "all lights off" in phrase:
+            action1 = diningroom_lights_OFF
+            action2 = lounge_lights_OFF
+            action3 = kitchen_lights_OFF
+            action4 = lamp_OFF
+            switch_device(phrase, action1)
+            time.sleep(0.5)
+            switch_device(phrase, action2)
+            time.sleep(0.5)
+            switch_device(phrase, action3)
+            time.sleep(0.5)
+            switch_device(phrase, action4)
+            time.sleep(0.5)
+            
         if "tv" in phrase or "telly" in phrase:
             if " on" in phrase or " off" in phrase:
                 os.system ("python BlackBeanControl.py -c power" )
