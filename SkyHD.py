@@ -19,12 +19,16 @@ now = datetime.datetime.now().strftime("%d-%b-%Y, %H:%M:%S")
 Vol_Range = 1
 delay = 0.5000
 http = urllib3.PoolManager()
-#lamp_ON = 'http://192.168.1.95/control?cmd=gpio,12,1'
-#lamp_OFF = 'http://192.168.1.95/control?cmd=gpio,12,0'
-lamp_ON = 'http://192.168.1.95/on'
-lamp_OFF = 'http://192.168.1.95/off'
+lamp_ON = 'http://192.168.1.121/on'
+lamp_OFF = 'http://192.168.1.121/off'
 kitchen_lights_ON = 'http://192.168.1.118/on'
 kitchen_lights_OFF = 'http://192.168.1.118/off'
+lounge_lights_ON = 'http://192.168.1.119/on'
+lounge_lights_OFF = 'http://192.168.1.119/off'
+diningroom_lights_ON = 'http://192.168.1.120/on'
+diningroom_lights_OFF = 'http://192.168.1.120/off'
+outside_xmas_lights_ON = 'http://192.168.1.126/on'
+outside_xmas_lights_OFF = 'http://192.168.1.126/off'
 
 app = Flask(__name__)
 
@@ -152,7 +156,7 @@ def switch_device(phrase, device_action):
         print("Failed to establish connection")
         log_device(phrase, device_action, " Fail")    
 
-# put all definitions before this line to avoid flask error
+# put all definitions before this line
 @app.route("/<phrase>", methods = ['POST', 'GET'])
        
 def data_input(phrase):
@@ -170,8 +174,8 @@ def data_input(phrase):
                 if "off" in phrase:
                     action = kitchen_lights_OFF
                 switch_device(phrase, action)
-
-         if "lounge" in phrase:
+                
+        if "lounge" in phrase:
             if "lights" in phrase or "light" in phrase:
                 if "on" in phrase:
                     action = lounge_lights_ON
@@ -185,7 +189,7 @@ def data_input(phrase):
                     action = diningroom_lights_ON
                 if "off" in phrase:
                     action = diningroom_lights_OFF
-                switch_device(phrase, action)               
+                switch_device(phrase, action)
                 
         if "lamp" in phrase:
             if "on" in phrase:
@@ -193,6 +197,29 @@ def data_input(phrase):
             elif "off" in phrase:
                 action = lamp_OFF
             switch_device(phrase, action)
+
+        if "christmas lights" in phrase:
+            if "outside" in phrase:
+                if "on" in phrase:
+                    action = outside_xmas_lights_ON
+                if "off" in phrase:
+                    action = outside_xmas_lights_OFF
+                switch_device(phrase, action)
+                
+            #if "inside" in phrase:
+                #if "on" in phrase:
+                    #action = inside_xmas_lights_ON
+                #if "off" in phrase:
+                    #action = inside_xmas_lights_OFF
+                #switch_device(phrase, action)
+
+            else:
+                if "on" in phrase:
+                    action = outside_xmas_lights_ON
+                if "off" in phrase:
+                    action = outside_xmas_lights_OFF
+                switch_device(phrase, action)                
+
 
         if "all lights off" in phrase:
             action1 = diningroom_lights_OFF
@@ -207,7 +234,7 @@ def data_input(phrase):
             time.sleep(0.5)
             switch_device(phrase, action4)
             time.sleep(0.5)
-            
+                   
         if "tv" in phrase or "telly" in phrase:
             if " on" in phrase or " off" in phrase:
                 os.system ("python BlackBeanControl.py -c power" )
@@ -236,6 +263,10 @@ def data_input(phrase):
                 os.system ("python BlackBeanControl.py -c voldown")
                 log_IR(phrase," TV Volume DOWN")
                 time.sleep(.500)
+                
+        elif " guide" in phrase:
+            os.system ("sky-remote-cli " + IP + " sky" + " tvguide" + " select")
+            log_action(phrase,IP," navigate to TV Guide Menu")
   
 # menus (show, go to, whats on, ip/menus "text")
 
@@ -308,7 +339,7 @@ def data_input(phrase):
             os.system ("sky-remote-cli " + IP + " " + SkyChannelList.discovery)
             log_channel(phrase,IP,SkyChannelList.discovery)
             
-        if "gold" in phrase: 
+        if "gold" in phrase or "uk gold" in phrase: 
             os.system ("sky-remote-cli " + IP + " " + SkyChannelList.gold)
             log_channel(phrase,IP,SkyChannelList.gold)
             
@@ -440,6 +471,5 @@ def data_input(phrase):
 
 if __name__== "__main__":
     app.run(host='0.0.0.0' , debug=False, use_reloader=False)
-
 
 
