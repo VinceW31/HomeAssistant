@@ -29,6 +29,22 @@ diningroom_lights_ON = 'http://192.168.1.120/on'
 diningroom_lights_OFF = 'http://192.168.1.120/off'
 outside_xmas_lights_ON = 'http://192.168.1.126/on'
 outside_xmas_lights_OFF = 'http://192.168.1.126/off'
+back_xmas_lights_ON = 'http://192.168.1.134/on'
+back_xmas_lights_OFF = 'http://192.168.1.134/off'
+bed1_xmas_lights_ON = 'http://192.168.1.128/on'
+bed1_xmas_lights_OFF = 'http://192.168.1.128/off'
+bed2_xmas_lights_ON = 'http://192.168.1.127/on'
+bed2_xmas_lights_OFF = 'http://192.168.1.127/off'
+hall_xmas_lights_ON = 'http://192.168.1.133/on'
+hall_xmas_lights_OFF = 'http://192.168.1.133/off'
+diningroom_xmas_lights_ON = 'http://192.168.1.132/on'
+diningroom_xmas_lights_OFF = 'http://192.168.1.132/off'
+lounge1_xmas_lights_ON = 'http://192.168.1.135/on'
+lounge1_xmas_lights_OFF = 'http://192.168.1.135/off'
+lounge2_xmas_lights_ON = 'http://192.168.1.136/on'
+lounge2_xmas_lights_OFF = 'http://192.168.1.136/off'
+floodlight_ON = 'http://192.168.1.134/on'
+floodlight_OFF = 'http://192.168.1.134/off'
 
 app = Flask(__name__)
 
@@ -197,42 +213,66 @@ def data_input(phrase):
             elif "off" in phrase:
                 action = lamp_OFF
             switch_device(phrase, action)
-
+            
+        if "floodlight" in phrase:
+            if "on" in phrase:
+                action = floodlight_ON
+            elif "off" in phrase:
+                action = floodlight_OFF
+            switch_device(phrase, action)
+            
         if "christmas lights" in phrase:
             if "outside" in phrase:
                 if "on" in phrase:
-                    action = outside_xmas_lights_ON
+                    switch_device(phrase, outside_xmas_lights_ON)
                 if "off" in phrase:
-                    action = outside_xmas_lights_OFF
-                switch_device(phrase, action)
-                
-            #if "inside" in phrase:
-                #if "on" in phrase:
-                    #action = inside_xmas_lights_ON
-                #if "off" in phrase:
-                    #action = inside_xmas_lights_OFF
-                #switch_device(phrase, action)
-
+                    switch_device(phrase, outside_xmas_lights_OFF)
             else:
                 if "on" in phrase:
-                    action = outside_xmas_lights_ON
+                    switch_device(phrase, outside_xmas_lights_ON)
+                    time.sleep(0.5)
+                    switch_device(phrase, back_xmas_lights_ON)
+                    time.sleep(0.5)
+                    switch_device(phrase, bed1_xmas_lights_ON)
+                    time.sleep(0.5)
+                    switch_device(phrase, bed2_xmas_lights_ON)
+                    time.sleep(0.5)
+                    switch_device(phrase, lounge1_xmas_lights_ON)
+                    time.sleep(0.5)
+                    switch_device(phrase, lounge2_xmas_lights_ON)
+                    time.sleep(0.5)
+                    switch_device(phrase, diningroom_xmas_lights_ON)
+                    time.sleep(0.5)
+                    switch_device(phrase, hall_xmas_lights_ON)
+                    time.sleep(0.5)
                 if "off" in phrase:
-                    action = outside_xmas_lights_OFF
-                switch_device(phrase, action)                
-
+                    switch_device(phrase, outside_xmas_lights_OFF)
+                    time.sleep(0.5)
+                    switch_device(phrase, back_xmas_lights_OFF)
+                    time.sleep(0.5)
+                    switch_device(phrase, bed1_xmas_lights_OFF)
+                    time.sleep(0.5)
+                    switch_device(phrase, bed2_xmas_lights_OFF)
+                    time.sleep(0.5)
+                    switch_device(phrase, hall_xmas_lights_OFF)
+                    time.sleep(0.5)
+                    switch_device(phrase, lounge1_xmas_lights_OFF)
+                    time.sleep(0.5)
+                    switch_device(phrase, lounge2_xmas_lights_OFF)
+                    time.sleep(0.5)
+                    switch_device(phrase, diningroom_xmas_lights_OFF)
+                    time.sleep(0.5)
+                    switch_device(phrase, hall_xmas_lights_OFF)
+                    time.sleep(0.5)
 
         if "all lights off" in phrase:
-            action1 = diningroom_lights_OFF
-            action2 = lounge_lights_OFF
-            action3 = kitchen_lights_OFF
-            action4 = lamp_OFF
-            switch_device(phrase, action1)
+            switch_device(phrase, diningroom_lights_OFF)
             time.sleep(0.5)
-            switch_device(phrase, action2)
+            switch_device(phrase, lounge_lights_OFF)
             time.sleep(0.5)
-            switch_device(phrase, action3)
+            switch_device(phrase, kitchen_lights_OFF)
             time.sleep(0.5)
-            switch_device(phrase, action4)
+            switch_device(phrase, lamp_OFF)
             time.sleep(0.5)
                    
         if "tv" in phrase or "telly" in phrase:
