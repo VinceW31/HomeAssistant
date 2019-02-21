@@ -214,7 +214,7 @@ def data_input(phrase):
                 action = lamp_OFF
             switch_device(phrase, action)
             
-        if "floodlight" in phrase:
+        if "flood light" in phrase:
             if "on" in phrase:
                 action = floodlight_ON
             elif "off" in phrase:
