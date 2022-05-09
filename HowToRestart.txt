@@ -1,0 +1,9 @@
+to stop the program from running:
+open new terminal window and type "sudo killall python"
+
+to Restart the program if it fails:
+open new terminal window and type "reboot", press enter.
+allow system to reboot and settle.
+open new terminal window and type "sudo killall python", press enter.
+type "cd skyHD", press enter.
+type "sudo python SkyHD.py", press enter.
